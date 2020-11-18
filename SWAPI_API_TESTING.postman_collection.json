@@ -1,0 +1,240 @@
+{
+	"info": {
+		"_postman_id": "9186357b-ef1b-41d0-91c7-da18e2f41b17",
+		"name": "SWAPI_API_TESTING",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://swapi.dev/api/people/1/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2555f4fb-7764-48f4-96b6-50a1f9e160eb",
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"var schema = {\r",
+							"    // specify the type of object\r",
+							"    \"type\": \"object\",\r",
+							"    // specify requires properties\r",
+							"    \"required\": [\"name\", \"homeworld\", \"films\", \"species\", \"starships\", \"vehicles\"],\r",
+							"    // describe the properties\r",
+							"    \"properties\": {\r",
+							"        \"name\": {\"type\": \"string\"},\r",
+							"        \"homeworld\": {\"type\": \"string\"},\r",
+							"        \"films\": {\r",
+							"            \"type\": \"array\",\r",
+							"            \"items\": {\"type\": \"string\"},\r",
+							"        },\r",
+							"        \"species\": {\r",
+							"            \"type\": \"array\",\r",
+							"            \"items\": {\"type\": \"string\"},\r",
+							"        },\r",
+							"        \"starships\": {\r",
+							"            \"type\": \"array\",\r",
+							"            \"items\": {\"type\": \"string\"},\r",
+							"        },\r",
+							"        \"vehicles\": {\r",
+							"            \"type\": \"array\",\r",
+							"            \"items\": {\"type\": \"string\"},\r",
+							"        },\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.test('Body is correct', function() {\r",
+							"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/people/1/",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						"people",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://swapi.dev/api/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2e802ac-8729-48ce-83c9-a001c5a83127",
+						"exec": [
+							"// 1. Correct response format JSON\r",
+							"pm.test(\"Correct response format JSON\", function() {\r",
+							"    pm.response.to.have.jsonBody\r",
+							"});\r",
+							"\r",
+							"// 2. We have all the declared fields in the response\r",
+							"pm.test(\"Check that we have all declared fields\", function() {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property(\"films\");\r",
+							"    pm.expect(jsonData).to.have.property(\"people\");\r",
+							"    pm.expect(jsonData).to.have.property(\"planets\");\r",
+							"    pm.expect(jsonData).to.have.property(\"species\");\r",
+							"    pm.expect(jsonData).to.have.property(\"starships\");\r",
+							"    pm.expect(jsonData).to.have.property(\"vehicles\");\r",
+							"});\r",
+							"\r",
+							"// 3. Field value isn't NULL\r",
+							"pm.test(\"Check if value isn't NULL\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.films).not.equal(null);\r",
+							"    pm.expect(jsonData.people).not.equal(null);\r",
+							"    pm.expect(jsonData.planets).not.equal(null);\r",
+							"    pm.expect(jsonData.species).not.equal(null);\r",
+							"    pm.expect(jsonData.starships).not.equal(null);\r",
+							"    pm.expect(jsonData.vehicles).not.equal(null);\r",
+							"});\r",
+							"\r",
+							"// 4. Field value isn't empty\r",
+							"pm.test(\"Check if value isn't empty\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.films).not.equal(\"\");\r",
+							"    pm.expect(jsonData.people).not.equal(\"\");\r",
+							"    pm.expect(jsonData.planets).not.equal(\"\");\r",
+							"    pm.expect(jsonData.species).not.equal(\"\");\r",
+							"    pm.expect(jsonData.starships).not.equal(\"\");\r",
+							"    pm.expect(jsonData.vehicles).not.equal(\"\");\r",
+							"});\r",
+							"\r",
+							"// 5. Check if field corresponds to a specific value\r",
+							"pm.test(\"Check if field corresponds to a specific value\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.films).to.equal(\"http://swapi.dev/api/films/\");\r",
+							"    pm.expect(jsonData.people).to.equal(\"http://swapi.dev/api/people/\");\r",
+							"    pm.expect(jsonData.planets).to.equal(\"http://swapi.dev/api/planets/\");\r",
+							"    pm.expect(jsonData.species).to.equal(\"http://swapi.dev/api/species/\");\r",
+							"    pm.expect(jsonData.starships).to.equal(\"http://swapi.dev/api/starships/\");\r",
+							"    pm.expect(jsonData.vehicles).to.equal(\"http://swapi.dev/api/vehicles/\");\r",
+							"});\r",
+							"\r",
+							"// 6. Status code is 200\r",
+							"pm.test(\"Status code is 200\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// 7. Status message is OK\r",
+							"pm.test(\"Status message is OK\", function() {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"// 8. Response time is less then 2000ms\r",
+							"pm.test(\"Check that response time is less then 2000ms\", function() {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+							"});\r",
+							"\r",
+							"// 9. There is a specific header in the response\r",
+							"pm.test(\"There is a specific header in the response\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\")\r",
+							"});\r",
+							"\r",
+							"// 10. The response has a specific header with specific value\r",
+							"pm.test(\"The response has a specific header with specific value\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json\")\r",
+							"});\r",
+							"\r",
+							"/*\r",
+							"// 11. Cookies exist\r",
+							"pm.test(\"Cookies exist\", function() {\r",
+							"    pm.cookies.has()\r",
+							"});\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://swapi.dev/api/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8dbf47a-9f02-4d97-a6b0-575c45f97fca",
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"var schema = {\r",
+							"    // specify the type of object\r",
+							"    \"type\": \"object\",\r",
+							"    // specify requires properties\r",
+							"    \"required\": [\"films\", \"people\", \"planets\", \"species\", \"starships\", \"vehicles\"],\r",
+							"    // describe the properties\r",
+							"    \"properties\": {\r",
+							"        \"films\": {\"type\": \"string\"},\r",
+							"        \"people\": {\"type\": \"string\"},\r",
+							"        \"planets\": {\"type\": \"string\"},\r",
+							"        \"species\": {\"type\": \"string\"},\r",
+							"        \"starships\": {\"type\": \"string\"},\r",
+							"        \"vehicles\": {\"type\": \"string\"},\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.test('Body is correct', function() {\r",
+							"    pm.expect(tv4.validate(data, schema)).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
